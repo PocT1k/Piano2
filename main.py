@@ -4,6 +4,7 @@ import pygame.midi
 
 from config import Sizes
 from config import Variables
+from keyboard import *
 from draw import drawScene
 from proc import procEvents
 
@@ -25,19 +26,29 @@ def initTurntable():
     return turntable
 pass
 
-def calcSizes():
-    Sizes.KEY_HEIGHT *= Sizes.SCREEN_HEIGHT
-    Sizes.KEY_WIDTH = Sizes.SCREEN_WIDTH / Variables.COUNT_WHITE_KEYS
-    Sizes.KEY_SEP *= Sizes.SCREEN_WIDTH / (Variables.COUNT_WHITE_KEYS + 1)
-    # Sizes.KEY_SEP = Sizes.KEY_SEP * (Sizes.KEY_WIDTH -)
+def calcKeyboard():
+    Keyboard.HEIGHT *= Sizes.SCREEN_HEIGHT
+    Keyboard.RECT = pygame.Rect(0, Sizes.SCREEN_HEIGHT - Keyboard.HEIGHT, Sizes.SCREEN_WIDTH, Keyboard.HEIGHT)
+
+    Keyboard.KEY_COLLISION_WIDTH = Sizes.SCREEN_WIDTH / Variables.COUNT_WHITE_KEYS
+    Keyboard.KEY_SEP *= Keyboard.KEY_COLLISION_WIDTH / 2
+    Keyboard.KEY_WIDTH = Keyboard.KEY_COLLISION_WIDTH - 2 * Keyboard.KEY_SEP
+    Keyboard.KEY_HEIGHT = Keyboard.HEIGHT - 2 * Keyboard.KEY_SEP
+
+    whiteKeys = Keyboard.whiteKeys
+    for i in range (Variables.COUNT_WHITE_KEYS):
+        whiteKeys.append(WhiteKey(
+            pygame.Rect(i * Keyboard.KEY_COLLISION_WIDTH, Keyboard.RECT.y, Keyboard.KEY_COLLISION_WIDTH, Keyboard.RECT.height),
+            pygame.Rect(i * Keyboard.KEY_COLLISION_WIDTH + Keyboard.KEY_SEP, Keyboard.RECT.y + Keyboard.KEY_SEP, Keyboard.KEY_WIDTH, Keyboard.KEY_HEIGHT) ))
+        whiteKeys[i].TONE = Variables.INIT_TONE + i
 pass
 
 
 def run():
     pygame.init()
     screen = initScreen()
-    turntable = initTurntable()
-    calcSizes()
+    Keyboard.turntable = initTurntable()
+    calcKeyboard()
 
     running = True
     while running:
