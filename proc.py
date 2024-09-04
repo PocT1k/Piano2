@@ -9,8 +9,12 @@ def procMouseKey(cX, cY):
     whiteKeys = Keyboard.whiteKeys
     for i in range (Variables.COUNT_WHITE_KEYS):
         if (whiteKeys[i].COLLISION_RECT.collidepoint(cX, cY)):
+            Keyboard.isWhiteKeys[i][0] = True
+            print("Тру")
             Keyboard.turntable.note_on(46 + i, 127)
-            break
+        else:
+            print("не Тру")
+            Keyboard.isWhiteKeys[i][0] = False
 
 def procKeyboard():
     cX, cY = pygame.mouse.get_pos()

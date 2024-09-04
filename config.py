@@ -16,4 +16,5 @@ class Sizes:
 class Variables:
     COUNT_WHITE_KEYS = 28
     COUNT_WHITE_KEYS_IDENT = 0
-    INIT_TONE = 46
+    MIDI_TONE = 46
+    MIDI_INSTRUMENT = 2

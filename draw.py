@@ -9,7 +9,9 @@ def drawKey(screen):
     keyboard = Keyboard
     isWhiteKeys = keyboard.isWhiteKeys
     for i in range (Variables.COUNT_WHITE_KEYS):
-        if(isWhiteKeys[i]):
+        if (isWhiteKeys[i][0]): print('123')
+        if (isWhiteKeys[i][1]): print('456')
+        if(isWhiteKeys[i][0] or isWhiteKeys[i][1]):
             pygame.draw.rect(screen, keyboard.KEY_DOWN_WHITE, keyboard.whiteKeys[i].DRAW_RECT)
         else:
             pygame.draw.rect(screen, keyboard.KEY_UP_WHITE, keyboard.whiteKeys[i].DRAW_RECT)

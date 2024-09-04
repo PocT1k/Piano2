@@ -1,5 +1,6 @@
 # UTF-8 Будет здесь!
 import pygame
+import pygame.midi
 
 from config import ColorRGB
 from config import Variables
@@ -15,8 +16,6 @@ class BlackKey:
 
 
 class Keyboard:
-    isMouseDown = False
-
     BG = ColorRGB.KEYBOARD_BG
     SCENE_BG = ColorRGB.BG
     KEY_UP_WHITE = ColorRGB.KEY_UP_WHITE
@@ -25,8 +24,13 @@ class Keyboard:
     HEIGHT = 0.25
     KEY_WIDTH = 0.0
     KEY_HEIGHT = 0.0
-    KEY_SEP = 0.05
+    KEY_SEP = 0.065
     RECT = pygame.Rect(0, 0, 0, 0)
 
+    isMouseDown = False
     whiteKeys = []
-    isWhiteKeys = [0] * Variables.COUNT_WHITE_KEYS
+    isWhiteKeys = [[False, False]] * Variables.COUNT_WHITE_KEYS
+
+    pygame.midi.init()
+    turntable = pygame.midi.Output(0)
+    turntable.set_instrument(Variables.MIDI_INSTRUMENT)
