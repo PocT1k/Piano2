@@ -19,7 +19,7 @@ def procKeyboard():
     if Keyboard.RECT.collidepoint(cX, cY):
         procMouseKey(cX, cY)
 
-def procEvents():
+def procEvents(keyboard):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
@@ -27,13 +27,13 @@ def procEvents():
             if event.key == pygame.K_ESCAPE:
                 return False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            Keyboard.isMouseDown = True
+            keyboard.isMouseDown = True
             procKeyboard()
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            Keyboard.isMouseDown = False
+            keyboard.isMouseDown = False
         elif event.type == pygame.MOUSEMOTION:
-            if (Keyboard.isMouseDown):
+            if (keyboard.isMouseDown):
                 procKeyboard()
 
     return True
