@@ -10,10 +10,8 @@ def procMouseKey(cX, cY):
     for i in range (Variables.COUNT_WHITE_KEYS):
         if (whiteKeys[i].COLLISION_RECT.collidepoint(cX, cY)):
             Keyboard.isWhiteKeys[i][0] = True
-            print("Тру")
             Keyboard.turntable.note_on(46 + i, 127)
         else:
-            print("не Тру")
             Keyboard.isWhiteKeys[i][0] = False
 
 def procKeyboard():

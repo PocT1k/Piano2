@@ -4,7 +4,7 @@ import pygame.midi
 
 from config import Sizes
 from config import Variables
-from keyboard import *
+from keyboard import Keyboard
 from draw import drawScene
 from proc import procEvents
 

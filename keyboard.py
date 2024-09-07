@@ -31,6 +31,10 @@ class Keyboard:
     whiteKeys = []
     isWhiteKeys = [[False, False]] * Variables.COUNT_WHITE_KEYS
 
-    pygame.midi.init()
-    turntable = pygame.midi.Output(0)
-    turntable.set_instrument(Variables.MIDI_INSTRUMENT)
+    def __init__(self, scene):
+        #midi
+        pygame.midi.init()
+        turntable = pygame.midi.Output(0)
+        turntable.set_instrument(Variables.MIDI_INSTRUMENT)
+
+        Keyboard.scene = scene
