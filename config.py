@@ -10,8 +10,8 @@ class ColorRGB:
     KEY_UP_BLACK = (0, 0, 0)
 
 class Sizes:
-    SCREEN_WIDTH = 300
-    SCREEN_HEIGHT = 160
+    SCREEN_WIDTH = 500
+    SCREEN_HEIGHT = 300
 
 class Variables:
     COUNT_WHITE_KEYS = 28

@@ -12,8 +12,13 @@ class WhiteKey:
         self.COLLISION_RECT = COLLISION_RECT
         self.DRAW_RECT = DRAW_RECT
 
+    def setNote(self, note):
+        self.note = note
+pass # class WhiteKey
+
 class BlackKey:
     pass
+pass # class BlackKey
 
 
 class Keyboard:
@@ -29,35 +34,110 @@ class Keyboard:
     RECT = pygame.Rect(0, 0, 0, 0)
 
     isMouseDown = False
+    plaingNotes = {}
     whiteKeys = []
     isWhiteKeys = [[False, False]] * Variables.COUNT_WHITE_KEYS
 
-    def __init__(self, scene):
+    def __init__(self, screen):
         #midi
         pygame.midi.init()
-        turntable = pygame.midi.Output(0)
-        turntable.set_instrument(Variables.MIDI_INSTRUMENT)
+        self.turntable = pygame.midi.Output(0)
+        self.turntable.set_instrument(Variables.MIDI_INSTRUMENT)
 
-        Keyboard.scene = scene
-    pass
+        self.screen = screen
+        self.init()
+    pass # __init__
 
-    def calc(self):
-        Keyboard.HEIGHT *= Sizes.SCREEN_HEIGHT
-        Keyboard.RECT = pygame.Rect(0, Sizes.SCREEN_HEIGHT - Keyboard.HEIGHT, Sizes.SCREEN_WIDTH, Keyboard.HEIGHT)
-
-        Keyboard.KEY_COLLISION_WIDTH = Sizes.SCREEN_WIDTH / Variables.COUNT_WHITE_KEYS
-        Keyboard.KEY_SEP *= Keyboard.KEY_COLLISION_WIDTH / 2
-        Keyboard.KEY_WIDTH = Keyboard.KEY_COLLISION_WIDTH - 2 * Keyboard.KEY_SEP
-        Keyboard.KEY_HEIGHT = Keyboard.HEIGHT - 2 * Keyboard.KEY_SEP
-
-        whiteKeys = Keyboard.whiteKeys
+    def initWhiteKeys(self):
         for i in range(Variables.COUNT_WHITE_KEYS):
-            whiteKeys.append(WhiteKey(
-                pygame.Rect(i * Keyboard.KEY_COLLISION_WIDTH, Keyboard.RECT.y, Keyboard.KEY_COLLISION_WIDTH,
-                            Keyboard.RECT.height),
-                pygame.Rect(i * Keyboard.KEY_COLLISION_WIDTH + Keyboard.KEY_SEP, Keyboard.RECT.y + Keyboard.KEY_SEP,
-                            Keyboard.KEY_WIDTH, Keyboard.KEY_HEIGHT)))
-            whiteKeys[i].TONE = Variables.MIDI_TONE + i
+            self.whiteKeys.append(WhiteKey(
+                pygame.Rect(i * self.KEY_COLLISION_WIDTH, self.RECT.y, self.KEY_COLLISION_WIDTH,
+                            self.RECT.height),
+                pygame.Rect(i * self.KEY_COLLISION_WIDTH + self.KEY_SEP, self.RECT.y + self.KEY_SEP,
+                            self.KEY_WIDTH, self.KEY_HEIGHT)))
 
-    pass
-pass # Keyboard
+            self.whiteKeys[i].setNote(Variables.MIDI_TONE + i)
+
+    pass # initWhiteKeys
+
+    def init(self):
+        self.HEIGHT *= Sizes.SCREEN_HEIGHT
+        self.RECT = pygame.Rect(0, Sizes.SCREEN_HEIGHT - self.HEIGHT, Sizes.SCREEN_WIDTH, self.HEIGHT)
+
+        self.KEY_COLLISION_WIDTH = Sizes.SCREEN_WIDTH / Variables.COUNT_WHITE_KEYS
+        self.KEY_SEP *= self.KEY_COLLISION_WIDTH / 2
+        self.KEY_WIDTH = self.KEY_COLLISION_WIDTH - 2 * self.KEY_SEP
+        self.KEY_HEIGHT = self.HEIGHT - 2 * self.KEY_SEP
+
+        self.initWhiteKeys()
+    pass # calc
+
+    def procNotes(self):
+        for i in range(Variables.COUNT_WHITE_KEYS):
+            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]):
+
+                if i in self.plaingNotes:
+                    pass
+        if False:
+            self.turntable.note_on(46, 127)
+    pass # playNotes
+
+    def procMouse(self, msg):
+        if msg == 'up':
+            self.isMouseDown = False
+            for i in range(Variables.COUNT_WHITE_KEYS): self.isWhiteKeys[i][0] = False
+            return
+        if msg == 'down':
+            self.isMouseDown = True
+        elif msg == 'motion':
+            pass
+        else:
+            print('ЧЗХ, тут не тот параметр')
+            exit(0)
+        
+        cX, cY = pygame.mouse.get_pos()
+        if (not self.RECT.collidepoint(cX, cY)): # Если не коллайдер клавиш
+            for i in range(Variables.COUNT_WHITE_KEYS): self.isWhiteKeys[i][0] = False
+            return
+
+        for i in range(Variables.COUNT_WHITE_KEYS):
+            if (self.whiteKeys[i].COLLISION_RECT.collidepoint(cX, cY)):
+                self.isWhiteKeys[i][0] = True
+                print(123) # TODO
+            else:
+                self.isWhiteKeys[i][0] = False
+    pass # procMouse
+    
+    def procKeyboard(self):
+        pass
+    pass # procKeyboard
+
+    def procEvents(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.procMouse('down')
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self.procMouse('up')
+            elif event.type == pygame.MOUSEMOTION:
+                self.procMouse('motion')
+        return True
+    pass # procEvents
+
+    def draw(self):
+        pygame.draw.rect(self.screen, self.BG, self.RECT)
+        
+        for i in range(Variables.COUNT_WHITE_KEYS):
+            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]): print('Ура!')
+            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]):
+                pygame.draw.rect(self.screen, self.KEY_DOWN_WHITE, self.whiteKeys[i].DRAW_RECT)
+            else:
+                pygame.draw.rect(self.screen, self.KEY_UP_WHITE, self.whiteKeys[i].DRAW_RECT)
+    pass # draw
+
+pass # class Keyboard

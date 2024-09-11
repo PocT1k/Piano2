@@ -3,10 +3,7 @@
 import pygame.midi
 
 from config import Sizes
-from config import Variables
 from keyboard import Keyboard
-from draw import drawScene
-from proc import procEvents
 
 
 def initScreen():
@@ -24,12 +21,15 @@ def run():
     pygame.init()
     screen = initScreen()
     keyboard = Keyboard(screen)
-    keyboard.calc()
 
     running = True
     while running:
-        drawScene(screen)
-        running = procEvents(keyboard)
+        running = keyboard.procEvents()
+        keyboard.procNotes()
+
+        screen.fill(Keyboard.SCENE_BG)
+        keyboard.draw()
+        pygame.display.flip()
     pass
 
     pygame.midi.quit()
