@@ -1,6 +1,5 @@
 # UTF-8 Будет здесь!
-#import pygame
-import pygame.midi
+import pygame
 
 from config import Sizes
 from keyboard import Keyboard
@@ -26,13 +25,13 @@ def run():
     while running:
         running = keyboard.procEvents()
         keyboard.procNotes()
+        # print(keyboard.isWhiteKeys[0][0])
 
         screen.fill(Keyboard.SCENE_BG)
         keyboard.draw()
         pygame.display.flip()
     pass
 
-    pygame.midi.quit()
     pygame.quit()
 pass
 
