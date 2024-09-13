@@ -15,6 +15,9 @@ class Key:
 
     def setTone(self, tone):
         self.tone = tone
+
+        self.key = ''
+        self.note = ''
         self.octave = ''
 pass # class Key
 
@@ -26,6 +29,26 @@ pass # class WhiteKey
 class BlackKey(Key):
     def __init__(self, COLLISION_RECT, DRAW_RECT):
         Key.__init__(self, COLLISION_RECT, DRAW_RECT)
+
+    def setShiftY(self, num, width):
+        match num:
+            case 0:
+                self.COLLISION_RECT.x -= width * 0.15
+                self.DRAW_RECT.x -= width * 0.15
+            case 1:
+                self.COLLISION_RECT.x += width * 0.15
+                self.DRAW_RECT.x += width * 0.15
+            case 3:
+                self.COLLISION_RECT.x -= width * 0.25
+                self.DRAW_RECT.x -= width * 0.25
+            case 4:
+                pass
+            case 5:
+                self.COLLISION_RECT.x += width * 0.25
+                self.DRAW_RECT.x += width * 0.25
+            case _:
+                print('ЧЗХ_2, тут не тот параметр')
+                exit(0)
 pass # class BlackKey
 
 
@@ -41,7 +64,7 @@ class Keyboard:
     KEY_SEP_VERTICAL = 0.065
     KEY_SEP_HORIZONTAL = 0.05
     KEY_BLACK_COLLISION_WIDTH = 0.65
-    KEY_BLACK_COLLISION_HEIGHT = 0.6
+    KEY_BLACK_COLLISION_HEIGHT = 0.7
     RECT = pygame.Rect(0, 0, 0, 0)
 
     isMouseDown = False
@@ -58,6 +81,11 @@ class Keyboard:
         self.calcCountKeys()
         self.isWhiteKeys = [[False, False] for _ in range(Variables.COUNT_WHITE_KEYS)]
         self.isBlackKeys = [[False, False] for _ in range(Variables.COUNT_BLACK_KEYS)]
+
+        font155 = pygame.font.Font("CodecPro-Regular.ttf", 155)
+        textPoint = font155.render("+1", True, (0, 0, 0))
+        #screen.blit(textPoint, (pointsStart + 25, menuHeight + widthWall + 80))
+
         self.init()
     pass # __init__
 
@@ -83,26 +111,29 @@ class Keyboard:
         tone = Variables.MIDI_TONE
         noteInOctave = self.countWhiteLeft
 
-        ib = 0
-        for iw in range(Variables.COUNT_WHITE_KEYS):
-            self.whiteKeys.append(WhiteKey(
-                pygame.Rect(self.RECT.x + iw * self.KEY_WHITE_COLLISION_WIDTH, self.RECT.y + 0,
+        for i in range(Variables.COUNT_WHITE_KEYS):
+            whiteKey = WhiteKey(
+                pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH, self.RECT.y + 0,
                             self.KEY_WHITE_COLLISION_WIDTH, self.KEY_WHITE_COLLISION_HEIGHT),
-                pygame.Rect(self.RECT.x + iw * self.KEY_WHITE_COLLISION_WIDTH + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                            self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL) ))
-            self.whiteKeys[iw].setTone(tone)
+                pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
+                            self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
+            whiteKey.setTone(tone)
+            self.whiteKeys.append(whiteKey)
 
-            if Change.addTone[noteInOctave]:
-                if iw + 1 == Variables.COUNT_WHITE_KEYS:
+            if Change.addToneOrBlack[noteInOctave]:
+                if i + 1 == Variables.COUNT_WHITE_KEYS:
                     break
                 tone += 1
-                self.blackKeys.append(BlackKey(
-                    pygame.Rect(self.RECT.x + (iw + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
-                                self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
-                    pygame.Rect(self.RECT.x + (iw + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                                self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL) ))
-                self.blackKeys[ib].setTone(tone)
-                ib += 1
+
+                blackKey = BlackKey(
+                    pygame.Rect(
+                        self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
+                        self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
+                    pygame.Rect(self.RECT.x + ( i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
+                                self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
+                blackKey.setTone(tone)
+                blackKey.setShiftY(noteInOctave, self.KEY_BLACK_COLLISION_WIDTH)
+                self.blackKeys.append(blackKey)
 
             noteInOctave = (noteInOctave + 1) % 7
             tone += 1
@@ -161,7 +192,7 @@ class Keyboard:
         elif msg == 'motion':
             pass
         else:
-            print('ЧЗХ, тут не тот параметр')
+            print('ЧЗХ_1, тут не тот параметр')
             exit(0)
 
         if (not self.isMouseDown):

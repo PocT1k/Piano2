@@ -21,8 +21,11 @@ class Variables:
     MIDI_TONE = 0
     MIDI_INSTRUMENT = 2
 
+    # not init
+    COUNT_BLACK_KEYS = 0
+
 class Change:
     countBlackKeysL = [0, 0, 1, 2, 3, 3, 4, 5]
     countBlackKeysR = [0, 0, 1, 2, 2, 3, 4, 5]
-    addTone = [1, 1, 0, 1, 1, 1, 0]
+    addToneOrBlack = [1, 1, 0, 1, 1, 1, 0]
 
