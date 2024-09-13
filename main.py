@@ -25,7 +25,6 @@ def run():
     while running:
         running = keyboard.procEvents()
         keyboard.procNotes()
-        # print(keyboard.isWhiteKeys[0][0])
 
         screen.fill(Keyboard.SCENE_BG)
         keyboard.draw()
