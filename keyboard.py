@@ -16,6 +16,7 @@ class Key:
     def setTone(self, tone):
         self.tone = tone
 
+    def setName(self, width, key = ''):
         self.key = ''
         self.note = ''
         self.octave = ''
@@ -24,11 +25,26 @@ pass # class Key
 class WhiteKey(Key):
     def __init__(self, COLLISION_RECT, DRAW_RECT):
         Key.__init__(self, COLLISION_RECT, DRAW_RECT)
+
+    FONT_SIZE_KEY = 0.6
+    def setName(self, width, key = ''):
+        if self.tone % 12 == 0:
+            self.octave = 'C' + str(self.tone // 12)
+        else:
+            self.octave = ''
+        if self.octave:
+            print(self.octave)
+        # Key.setName(self, width * WhiteKey.FONT_SIZE_KEY, key)
 pass # class WhiteKey
 
 class BlackKey(Key):
     def __init__(self, COLLISION_RECT, DRAW_RECT):
         Key.__init__(self, COLLISION_RECT, DRAW_RECT)
+
+    FONT_SIZE_KEY = 0.6
+
+    def setName(self, width, key=''):
+        Key.setName(self, width * BlackKey.FONT_SIZE_KEY, key)
 
     def setShiftY(self, num, width):
         match num:
@@ -53,6 +69,7 @@ pass # class BlackKey
 
 
 class Keyboard:
+    # Colors
     BG = ColorRGB.KEYBOARD_BG
     SCENE_BG = ColorRGB.BG
     KEY_UP_WHITE = ColorRGB.KEY_UP_WHITE
@@ -60,17 +77,14 @@ class Keyboard:
     KEY_UP_BLACK = ColorRGB.KEY_UP_BLACK
     KEY_DOWN_BLACK = ColorRGB.KEY_DOWN_BLACK
 
+    # Configuration
     HEIGHT = 0.25
     KEY_SEP_VERTICAL = 0.065
     KEY_SEP_HORIZONTAL = 0.05
     KEY_BLACK_COLLISION_WIDTH = 0.65
     KEY_BLACK_COLLISION_HEIGHT = 0.7
-    RECT = pygame.Rect(0, 0, 0, 0)
 
-    isMouseDown = False
-    plaingNotes = set()
-    blackKeys = []
-    whiteKeys = []
+    FONT_BLACK_SIZE_NAME = 0.5
 
     def __init__(self, screen):
         pygame.midi.init()
@@ -110,6 +124,17 @@ class Keyboard:
     def initKeys(self):
         tone = Variables.MIDI_TONE
         noteInOctave = self.countWhiteLeft
+        self.isMouseDown = False
+        self.plaingNotes = set()
+        self.blackKeys = []
+        self.whiteKeys = []
+
+        self.overlayWhite = pygame.Surface((self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
+                                            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
+        self.overlayWhite.fill((*self.KEY_DOWN_WHITE, 128))
+        self.overlayBlack = pygame.Surface((self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
+                                            self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
+        self.overlayBlack.fill((*self.KEY_DOWN_BLACK, 128))
 
         for i in range(Variables.COUNT_WHITE_KEYS):
             whiteKey = WhiteKey(
@@ -118,6 +143,7 @@ class Keyboard:
                 pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
                             self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
             whiteKey.setTone(tone)
+            whiteKey.setName(self.KEY_WHITE_COLLISION_WIDTH, 'klB')
             self.whiteKeys.append(whiteKey)
 
             if Change.addToneOrBlack[noteInOctave]:
@@ -126,12 +152,12 @@ class Keyboard:
                 tone += 1
 
                 blackKey = BlackKey(
-                    pygame.Rect(
-                        self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
-                        self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
-                    pygame.Rect(self.RECT.x + ( i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
+                    pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
+                                self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
+                    pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
                                 self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
                 blackKey.setTone(tone)
+                blackKey.setName(self.KEY_BLACK_COLLISION_WIDTH, 'kl')
                 blackKey.setShiftY(noteInOctave, self.KEY_BLACK_COLLISION_WIDTH)
                 self.blackKeys.append(blackKey)
 
@@ -250,16 +276,14 @@ class Keyboard:
         pygame.draw.rect(self.screen, self.BG, self.RECT)
         
         for i in range(Variables.COUNT_WHITE_KEYS):
-            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]):
-                pygame.draw.rect(self.screen, self.KEY_DOWN_WHITE, self.whiteKeys[i].DRAW_RECT)
-            else:
-                pygame.draw.rect(self.screen, self.KEY_UP_WHITE, self.whiteKeys[i].DRAW_RECT)
+            pygame.draw.rect(self.screen, self.KEY_UP_WHITE, self.whiteKeys[i].DRAW_RECT)
+            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]): # Нажатие
+                self.screen.blit(self.overlayWhite, (self.whiteKeys[i].DRAW_RECT.x, self.whiteKeys[i].DRAW_RECT.y))
 
         for i in range(Variables.COUNT_BLACK_KEYS):
-            if (self.isBlackKeys[i][0] or self.isBlackKeys[i][1]):
-                pygame.draw.rect(self.screen, self.KEY_DOWN_BLACK, self.blackKeys[i].DRAW_RECT)
-            else:
-                pygame.draw.rect(self.screen, self.KEY_UP_BLACK, self.blackKeys[i].DRAW_RECT)
+            pygame.draw.rect(self.screen, self.KEY_UP_BLACK, self.blackKeys[i].DRAW_RECT)
+            if (self.isBlackKeys[i][0] or self.isBlackKeys[i][1]): # Нажатие
+                self.screen.blit(self.overlayBlack, (self.blackKeys[i].DRAW_RECT.x, self.blackKeys[i].DRAW_RECT.y))
     pass # draw
 
 pass # class Keyboard
