@@ -28,5 +28,5 @@ class Variables:
 class Change:
     countBlackKeysL = [0, 0, 1, 2, 3, 3, 4, 5]
     countBlackKeysR = [0, 0, 1, 2, 2, 3, 4, 5]
-    addToneOrBlack = [1, 1, 0, 1, 1, 1, 0]
-
+    addToneAndBlack = [1, 1, 0, 1, 1, 1, 0]
+    nameNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
