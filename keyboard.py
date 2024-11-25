@@ -2,6 +2,7 @@
 import pygame
 import pygame.midi
 import time
+import math
 
 from config import ColorRGB, Sizes, Variables, Change
 
@@ -29,7 +30,7 @@ class Key:
         # Key
         self.strKey = Variables.KEYS_NAMES[self.keyboardKey]
         self.sizeFontKey = int(self.DRAW_RECT.width / 2)
-        self.fontKey = pygame.font.Font("BuilderMono-Regular.otf", self.sizeFontKey)
+        self.fontKey = pygame.font.SysFont("Verdana", self.sizeFontKey)
         # Note
         self.strNote = Change.namesNotes[Variables.NAME_NOTE][self.tone % 12]
         # Octave
@@ -45,7 +46,7 @@ class WhiteKey(Key):
         # Octave
         if self.strOctave:
             self.sizeFontOctave = int(self.DRAW_RECT.width / 2)
-            self.fontOctave = pygame.font.Font("BuilderMono-Regular.otf", self.sizeFontOctave)
+            self.fontOctave = pygame.font.SysFont("Verdana", self.sizeFontOctave)
             self.textOctave = self.fontOctave.render(self.strOctave, True, ColorRGB.TEXT_OCTAVE)
     pass  # __init__
 pass  # class WhiteKey
@@ -72,7 +73,6 @@ class BlackKey(Key):
             case _:
                 print('ЧЗХ_2, тут не тот параметр')
                 exit(0)
-
         Key.__init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone)
 
         # Key
@@ -101,6 +101,7 @@ class Keyboard:
         self.scaleW, self.scaleH = scaleW, scaleH
         self.scaleM = (self.scaleW + self.scaleH) / 2
 
+        pygame.font.init()
         pygame.midi.init()
         self.turntable = pygame.midi.Output(0)
         self.turntable.set_instrument(self.instrument)
@@ -146,13 +147,13 @@ class Keyboard:
         for i in range(Variables.COUNT_WHITE_KEYS):
             whiteKey = WhiteKey(
                 pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH,
-                            self.RECT.y,
-                            self.KEY_WHITE_COLLISION_WIDTH,
-                            self.KEY_WHITE_COLLISION_HEIGHT),
+                    self.RECT.y,
+                    self.KEY_WHITE_COLLISION_WIDTH,
+                    self.KEY_WHITE_COLLISION_HEIGHT),
                 pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH + self.KEY_SEP_VERTICAL,
-                            self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                            self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+                    self.RECT.y + self.KEY_SEP_HORIZONTAL,
+                    self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
+                    self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
                 number, shiftTone)
             self.whiteKeys.append(whiteKey)
 
@@ -163,13 +164,13 @@ class Keyboard:
 
                 blackKey = BlackKey(
                     pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2,
-                                self.RECT.y,
-                                self.KEY_BLACK_COLLISION_WIDTH,
-                                self.KEY_BLACK_COLLISION_HEIGHT),
+                        self.RECT.y,
+                        self.KEY_BLACK_COLLISION_WIDTH,
+                        self.KEY_BLACK_COLLISION_HEIGHT),
                     pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL,
-                                self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                                self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                                self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+                        self.RECT.y + self.KEY_SEP_HORIZONTAL,
+                        self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
+                        self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
                 number, shiftTone)
                 self.blackKeys.append(blackKey)
 
@@ -306,17 +307,11 @@ class Keyboard:
                 self.volume = 0
         if keys[pygame.K_RIGHT]:
             self.timeChangesSettings = time.time()
-            if self.instrument < 127:
-                self.instrument += 1
-            else:
-                self.instrument = 0
+            self.instrument = (self.instrument + 1) % 128
             self.turntable.set_instrument(self.instrument)
         if keys[pygame.K_LEFT]:
             self.timeChangesSettings = time.time()
-            if self.instrument > 0:
-                self.instrument -= 1
-            else:
-                self.instrument = 127
+            self.instrument = (self.instrument - 1) % 128
             self.turntable.set_instrument(self.instrument)
 
     pass  # procKeyboard
@@ -370,33 +365,58 @@ class Keyboard:
             # Сама нота
             pygame.draw.rect(self.screen, RGB_UP, note.DRAW_RECT)
             self.screen.blit(note.textKey, (note.DRAW_RECT.left + 5 * self.scaleW,
-                note.COLLISION_RECT.top + note.COLLISION_RECT.height - note.sizeFontKey - 15 * self.scaleH))
+                note.COLLISION_RECT.top + note.COLLISION_RECT.height - note.sizeFontKey - 17 * self.scaleH))
 
             if (isKeys[i][0] or isKeys[i][1]):  # Нажатие
                 self.screen.blit(overlayNote, (note.DRAW_RECT.x, note.DRAW_RECT.y))
     pass  # drawNote
 
     def drawLines(self):
+        # Вертикальные
         for i, note in enumerate(self.whiteKeys):
             if note.number % 12 == 0:
                 pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
-                                 (note.COLLISION_RECT.left, note.COLLISION_RECT.top),
-                                 (note.COLLISION_RECT.left, note.COLLISION_RECT.top - self.RECT.top),
-                                 width = int(5 * self.scaleH))
+                    (note.COLLISION_RECT.left, note.COLLISION_RECT.top),
+                    (note.COLLISION_RECT.left, note.COLLISION_RECT.top - self.RECT.top),
+                    width = int(5 * self.scaleH))
             if note.number % 12 == 11:
                 pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
-                                 (note.COLLISION_RECT.left + note.COLLISION_RECT.width, note.COLLISION_RECT.top),
-                                 (note.COLLISION_RECT.left + note.COLLISION_RECT.width, note.COLLISION_RECT.top - self.RECT.top),
-                                 width = int(4 * self.scaleH))
+                    (note.COLLISION_RECT.left + note.COLLISION_RECT.width, note.COLLISION_RECT.top),
+                    (note.COLLISION_RECT.left + note.COLLISION_RECT.width, note.COLLISION_RECT.top - self.RECT.top),
+                    width = int(4 * self.scaleH))
+        # Горизонтальные
+        intervalLines = 1
+        quanLines = self.timeDelFall
+        while quanLines > 4 or quanLines < 2:
+            if quanLines > 4:
+                quanLines /= 2
+                intervalLines *= 2
+            else:  # quanLines < 2
+                quanLines *= 2
+                intervalLines /= 2
+
+        fontLine = pygame.font.SysFont("Verdana", int(20 * self.scaleM))
+        quanLines = math.floor(quanLines)
+        for i in range (1, quanLines * 2):
+            y = self.RECT.top - i * self.speedFall
+            if y < 0: # Если рисуем за экраном
+                break
+
+            pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
+                (self.RECT.left, y),
+                (self.RECT.left + self.RECT.width, self.RECT.top - i * self.speedFall),
+                width=int(2 * self.scaleW))
+            textLine = fontLine.render(f'{i * intervalLines}s', True, ColorRGB.SCENE_LINES)
+            self.screen.blit(textLine, (self.RECT.left + 5 * self.scaleW, y + 0 * self.scaleH))
+
     pass  # drawLines
 
     def drawHud(self, currentTime):
 
         if currentTime < self.timeChangesSettings + 5:
-
-            fontHud = pygame.font.Font("BuilderMono-Regular.otf", int(64 * self.scaleM))
+            fontHud = pygame.font.SysFont("Arial", int(64 * self.scaleM))
             # Instrument
-            textPoint = fontHud.render(f'Instrument: {self.instrument}', True, ColorRGB.WHITE)
+            textPoint = fontHud.render(f'Instrument: {self.instrument} {Variables.MIDI_INSTRUMENTS[self.instrument]}', True, ColorRGB.WHITE)
             self.screen.blit(textPoint, (10 * self.scaleW, 10 * self.scaleH))
             # Volume
             textPoint = fontHud.render(f'Volume: {self.volume}', True, ColorRGB.WHITE)
