@@ -214,7 +214,7 @@ class Keyboard:
         elif msg == 'motion':
             pass
         else:
-            print('ЧЗХ_1, тут не тот параметр')
+            print('ЧЗХ_1 , тут не тот параметр')
             exit(0)
 
         if not self.isMouseDown:
