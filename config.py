@@ -3,27 +3,41 @@ import pygame
 
 
 class ColorRGB:
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+
     SCENE_BG = (56, 56, 56)
-    KEYBOARD_BG = (0, 0, 0)
+    SCENE_LINES = (120, 120, 120)
+    KEYBOARD_BG = BLACK
+    KEY_DOWN = (127, 127, 127)
+    TRIM_FALL = (31, 31, 31)
+    TEXT_OCTAVE = (239, 239, 239)
 
-    KEY_UP_WHITE = (255, 255, 255)
-    KEY_DOWN_WHITE = (175, 175, 175)
+    # White
+    KEY_UP_WHITE = WHITE
+    KEY_DOWN_WHITE = KEY_DOWN  # (175, 175, 175)
     FALL_GREEN_WHITE = (0, 208, 0)
+    # FONT_WHITE = (63, 63, 63)
 
+    # Black
     KEY_UP_BLACK = (15, 15, 15)
-    KEY_DOWN_BLACK = (63, 63, 63)
+    KEY_DOWN_BLACK = KEY_DOWN  # (63, 63, 63)
     FALL_GREEN_BLACK = (0, 138, 0)
 
 class Sizes:
     SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
     # SCREEN_WIDTH, SCREEN_HEIGHT = 500, 300
+    # left, top, width, height
 
 class Variables:
-    COUNT_WHITE_KEYS = 28
-    COUNT_WHITE_KEYS_IDENT = 0
-    OCTAVE = 3
-    MIDI_TONE = 0
+    COUNT_WHITE_KEYS = 28  # Сколько всего белых клавиш
+    COUNT_WHITE_KEYS_IDENT = 0  # Сколько пропустить или добавить в 1-й октаве, что именно - не помню
+    OCTAVE = 4  # Октава, с которой начинаем
+    MIDI_TONE = 0  # Сдвиг нот
     MIDI_INSTRUMENT = 2
+    SPEED_FALL = 220
+    START_VOLUME = 127
+    NAME_NOTE = 'C'
 
     KEYS_LINE_1 = [pygame.K_BACKQUOTE, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
               pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS, pygame.K_BACKSPACE]
@@ -41,6 +55,7 @@ class Variables:
             pygame.K_m, pygame.K_k, pygame.K_COMMA, pygame.K_l, pygame.K_PERIOD, pygame.K_SLASH, pygame.K_QUOTE, pygame.K_RSHIFT, pygame.K_BACKSLASH
     ]
     KEYS_NAMES = {
+        None: '',
         pygame.K_BACKQUOTE: '~',
         pygame.K_1: '1',
         pygame.K_2: '2',
@@ -55,7 +70,7 @@ class Variables:
         pygame.K_MINUS: '-',
         pygame.K_EQUALS: '=',
         pygame.K_BACKSPACE: 'BS',
-        pygame.K_TAB: 'TB',
+        pygame.K_TAB: 'TB',  # 36 - start tone
         pygame.K_q: 'q',
         pygame.K_w: 'w',
         pygame.K_e: 'e',
@@ -107,4 +122,8 @@ class Change:
     countBlackKeysL = [0, 0, 1, 2, 3, 3, 4, 5]
     countBlackKeysR = [0, 0, 1, 2, 2, 3, 4, 5]
     addToneAndBlack = [1, 1, 0, 1, 1, 1, 0]
-    nameNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+    namesNotes = {
+        'C': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+        'do': ['do', '', 're', '', 'mi', 'fa', '', 'sol', '', 'la', '', 'si'],
+        '1': ['1', '', '2', '', '3', '4', '', '5', '', '6', '', '7']
+    }
