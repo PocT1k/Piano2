@@ -21,6 +21,14 @@ class Key:
         self.strKey = ''
         self.strNote = ''
         self.strOctave = ''
+
+    def setKey(self, key=''):
+        self.key = key
+        self.nameNote = Change.nameNotes[self.tone % 12]
+        if self.tone % 12 == 0:
+            self.octave = 'C' + str(self.tone // 12)
+        else:
+            self.octave = ''
 pass # class Key
 
 class WhiteKey(Key):
@@ -120,16 +128,13 @@ class Keyboard:
         noteInOctave = self.countWhiteLeft
 
         self.overlayWhite = pygame.Surface((self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                                            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
-                                           pygame.SRCALPHA)
+            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
         self.overlayWhite.fill((*self.KEY_DOWN_WHITE, 128))
         self.overlayBlack = pygame.Surface((self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                                            self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
-                                           pygame.SRCALPHA)
+            self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
         self.overlayBlack.fill((*self.KEY_DOWN_BLACK, 128))
 
-        fontOctave = pygame.font.Font("BuilderMono-Regular.otf",
-                                      (self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL))
+        fontOctave = pygame.font.Font("BuilderMono-Regular.otf", int(self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL))
         # textOctave = fontOctave.render(self.octave, True, (0, 0, 0))
         # # screen.blit(textPoint, (pointsStart + 25, menuHeight + widthWall + 80))
 
@@ -142,7 +147,7 @@ class Keyboard:
             number, shiftTone)
             self.whiteKeys.append(whiteKey)
 
-            if Change.addToneOrBlack[noteInOctave]:
+            if Change.addToneAndBlack[noteInOctave]:
                 if i + 1 == Variables.COUNT_WHITE_KEYS:
                     break
                 number += 1
@@ -297,13 +302,15 @@ class Keyboard:
         
         for i in range(Variables.COUNT_WHITE_KEYS):
             pygame.draw.rect(self.screen, self.KEY_UP_WHITE, self.whiteKeys[i].DRAW_RECT)
-            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]): # Нажатие
+            # if self.whiteKeys[i].octave:
+            #     print()
+            if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]):  # Нажатие
                 rect = self.whiteKeys[i].DRAW_RECT
                 self.screen.blit(self.overlayWhite, (rect.x, rect.y))
 
         for i in range(Variables.COUNT_BLACK_KEYS):
             pygame.draw.rect(self.screen, self.KEY_UP_BLACK, self.blackKeys[i].DRAW_RECT)
-            if (self.isBlackKeys[i][0] or self.isBlackKeys[i][1]): # Нажатие
+            if (self.isBlackKeys[i][0] or self.isBlackKeys[i][1]):  # Нажатие
                 rect = self.blackKeys[i].DRAW_RECT
                 self.screen.blit(self.overlayBlack, (rect.x, rect.y))
     pass # draw
