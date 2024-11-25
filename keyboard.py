@@ -2,37 +2,35 @@
 import pygame
 import pygame.midi
 
-from config import ColorRGB
-from config import Sizes
-from config import Variables
-from config import Change
+from config import ColorRGB, Sizes, Variables, Change
 
 
 class Key:
-    def __init__(self, COLLISION_RECT, DRAW_RECT):
+    def __init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone):
         self.COLLISION_RECT = COLLISION_RECT
         self.DRAW_RECT = DRAW_RECT
 
-    def setTone(self, tone):
-        self.tone = tone
+        self.number = number
+        self.tone = number + shiftTone
+        try:
+            self.keyboardKey = Variables.KEYS[number]
+        except IndexError:
+            self.keyboardKey = None
+        # print(self.keyboardKey)
 
-    def setKey(self, key = ''):
-        self.key = key
-        self.nameNote = Change.nameNotes[self.tone % 12]
-        if self.tone % 12 == 0: self.octave = 'C' + str(self.tone // 12)
-        else: self.octave = ''
+        self.strKey = ''
+        self.strNote = ''
+        self.strOctave = ''
 pass # class Key
 
 class WhiteKey(Key):
-    def __init__(self, COLLISION_RECT, DRAW_RECT):
-        Key.__init__(self, COLLISION_RECT, DRAW_RECT)
-
-    FONT_SIZE_KEY = 0.6
+    def __init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone):
+        Key.__init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone)
 pass # class WhiteKey
 
 class BlackKey(Key):
-    def __init__(self, COLLISION_RECT, DRAW_RECT):
-        Key.__init__(self, COLLISION_RECT, DRAW_RECT)
+    def __init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone):
+        Key.__init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone)
 
     FONT_SIZE_KEY = 0.6
 
@@ -73,8 +71,13 @@ class Keyboard:
     KEY_SEP_HORIZONTAL = 0.05
     KEY_BLACK_COLLISION_WIDTH = 0.65
     KEY_BLACK_COLLISION_HEIGHT = 0.7
-
+    RECT = pygame.Rect(0, 0, 0, 0)
     FONT_BLACK_SIZE_NAME = 0.5
+
+    isMouseDown = False
+    plaingNotes = set()
+    blackKeys = []
+    whiteKeys = []
 
     def __init__(self, screen):
         pygame.midi.init()
@@ -85,6 +88,10 @@ class Keyboard:
         self.calcCountKeys()
         self.isWhiteKeys = [[False, False] for _ in range(Variables.COUNT_WHITE_KEYS)]
         self.isBlackKeys = [[False, False] for _ in range(Variables.COUNT_BLACK_KEYS)]
+
+        font155 = pygame.font.Font("CodecPro-Regular.ttf", 155)
+        textPoint = font155.render("+1", True, (0, 0, 0))
+        #screen.blit(textPoint, (pointsStart + 25, menuHeight + widthWall + 80))
 
         self.init()
     pass # __init__
@@ -108,21 +115,21 @@ class Keyboard:
     pass # calcCountKeys
 
     def initKeys(self):
-        tone = Variables.MIDI_TONE
+        shiftTone = Variables.MIDI_TONE
+        number = 0
         noteInOctave = self.countWhiteLeft
-        self.isMouseDown = False
-        self.plaingNotes = set()
-        self.blackKeys = []
-        self.whiteKeys = []
 
         self.overlayWhite = pygame.Surface((self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                                            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
+                                            self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+                                           pygame.SRCALPHA)
         self.overlayWhite.fill((*self.KEY_DOWN_WHITE, 128))
         self.overlayBlack = pygame.Surface((self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL,
-                                            self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL), pygame.SRCALPHA)
+                                            self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+                                           pygame.SRCALPHA)
         self.overlayBlack.fill((*self.KEY_DOWN_BLACK, 128))
 
-        fontOctave = pygame.font.Font("BuilderMono-Regular.otf", (self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL))
+        fontOctave = pygame.font.Font("BuilderMono-Regular.otf",
+                                      (self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL))
         # textOctave = fontOctave.render(self.octave, True, (0, 0, 0))
         # # screen.blit(textPoint, (pointsStart + 25, menuHeight + widthWall + 80))
 
@@ -131,28 +138,27 @@ class Keyboard:
                 pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH, self.RECT.y + 0,
                             self.KEY_WHITE_COLLISION_WIDTH, self.KEY_WHITE_COLLISION_HEIGHT),
                 pygame.Rect(self.RECT.x + i * self.KEY_WHITE_COLLISION_WIDTH + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                            self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
-            whiteKey.setTone(tone)
-            whiteKey.setKey('klB')
+                            self.KEY_WHITE_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_WHITE_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+            number, shiftTone)
             self.whiteKeys.append(whiteKey)
 
-            if Change.addToneAndBlack[noteInOctave]:
+            if Change.addToneOrBlack[noteInOctave]:
                 if i + 1 == Variables.COUNT_WHITE_KEYS:
                     break
-                tone += 1
+                number += 1
 
                 blackKey = BlackKey(
-                    pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
-                                self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
+                    pygame.Rect(
+                        self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2, self.RECT.y + 0,
+                        self.KEY_BLACK_COLLISION_WIDTH, self.KEY_BLACK_COLLISION_HEIGHT),
                     pygame.Rect(self.RECT.x + (i + 1) * self.KEY_WHITE_COLLISION_WIDTH - self.KEY_BLACK_COLLISION_WIDTH / 2 + self.KEY_SEP_VERTICAL, self.RECT.y + self.KEY_SEP_HORIZONTAL,
-                                self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL))
-                blackKey.setTone(tone)
-                blackKey.setKey('kl')
+                                self.KEY_BLACK_COLLISION_WIDTH - 2 * self.KEY_SEP_VERTICAL, self.KEY_BLACK_COLLISION_HEIGHT - 2 * self.KEY_SEP_HORIZONTAL),
+                number, shiftTone)
                 blackKey.setShiftY(noteInOctave, self.KEY_BLACK_COLLISION_WIDTH)
                 self.blackKeys.append(blackKey)
 
             noteInOctave = (noteInOctave + 1) % 7
-            tone += 1
+            number += 1
     pass # initWhiteKeys
 
     def init(self):
@@ -179,7 +185,7 @@ class Keyboard:
                 if not (tone in self.plaingNotes):
                     self.plaingNotes.add(tone)
                     self.turntable.note_on(tone, 127)
-            else: # not (self.isBlackKeys[i][0] or self.isBlackKeys[i][1])
+            else:
                 if (tone in self.plaingNotes):
                     self.plaingNotes.remove(tone)
                     self.turntable.note_off(tone, 127)
@@ -191,7 +197,7 @@ class Keyboard:
                 if not (tone in self.plaingNotes):
                     self.plaingNotes.add(tone)
                     self.turntable.note_on(tone, 127)
-            else: # not (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1])
+            else:
                 if (tone in self.plaingNotes):
                     self.plaingNotes.remove(tone)
                     self.turntable.note_off(tone, 127)
@@ -211,11 +217,11 @@ class Keyboard:
             print('ЧЗХ_1, тут не тот параметр')
             exit(0)
 
-        if (not self.isMouseDown):
+        if not self.isMouseDown:
             return
 
         cX, cY = pygame.mouse.get_pos()
-        if (not self.RECT.collidepoint(cX, cY)): # Если не коллайдер клавиш
+        if not self.RECT.collidepoint(cX, cY): # Если не коллайдер клавиш
             for i in range(Variables.COUNT_WHITE_KEYS): self.isWhiteKeys[i][0] = False
             for i in range(Variables.COUNT_BLACK_KEYS): self.isBlackKeys[i][0] = False
             return
@@ -241,8 +247,29 @@ class Keyboard:
             self.isWhiteKeys[i][0] = False
     pass # procMouse
     
-    def procKeyboard(self):
-        pass
+    def procKeyboard(self): # Обработка клавиш клавиатуры
+        keys = pygame.key.get_pressed()
+
+        for i in range(Variables.COUNT_WHITE_KEYS):
+            if self.whiteKeys[i].keyboardKey == None: # Выходим, если у клавиши нет кнопки
+                continue
+
+            if keys[self.whiteKeys[i].keyboardKey]: # Клавиша нажата
+                self.isWhiteKeys[i][1] = True
+                continue
+            elif self.isWhiteKeys[i][1] == True: # Если не нажата, но числится нажатой
+                self.isWhiteKeys[i][1] = False
+
+        for i in range(Variables.COUNT_BLACK_KEYS):
+            if self.blackKeys[i].keyboardKey == None: # Выходим, если у клавиши нет кнопки
+                continue
+
+            if keys[self.blackKeys[i].keyboardKey]: # Клавиша нажата
+                self.isBlackKeys[i][1] = True
+                continue
+            elif self.isBlackKeys[i][1] == True: # Если не нажата, но числится нажатой
+                self.isBlackKeys[i][1] = False
+
     pass # procKeyboard
 
     def procEvents(self):
@@ -252,6 +279,9 @@ class Keyboard:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return False
+                self.procKeyboard()
+            elif event.type == pygame.KEYUP:
+                self.procKeyboard()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.procMouse('down')
@@ -267,8 +297,6 @@ class Keyboard:
         
         for i in range(Variables.COUNT_WHITE_KEYS):
             pygame.draw.rect(self.screen, self.KEY_UP_WHITE, self.whiteKeys[i].DRAW_RECT)
-            if self.whiteKeys[i].octave:
-                print()
             if (self.isWhiteKeys[i][0] or self.isWhiteKeys[i][1]): # Нажатие
                 rect = self.whiteKeys[i].DRAW_RECT
                 self.screen.blit(self.overlayWhite, (rect.x, rect.y))
