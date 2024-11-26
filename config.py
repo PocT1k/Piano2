@@ -37,36 +37,58 @@ class ColorRGB:
         (228, 211, 227)
     ]
 
+pass  # ColorRGB
+
+
 class Sizes:
     SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
     # SCREEN_WIDTH, SCREEN_HEIGHT = 500, 300
     # left, top, width, height, right, bottom, center
+pass  # Sizes
+
 
 class Variables:
-    COUNT_WHITE_KEYS = 28  # Сколько всего белых клавиш
+    COUNT_WHITE_KEYS = 7 * 5  # Сколько белых клавиш делать
     COUNT_WHITE_KEYS_IDENT = 0  # Сколько клавиш добавить к октаве слева
     OCTAVE = 4  # Октава, с которой начинаем
     MIDI_TONE = 0
     MIDI_INSTRUMENT = 0
     SPEED_FALL = 220
     START_VOLUME = 127
-    NAME_NOTE = 'do#'
+    NAME_NOTE = 'C#'
 
-    KEYS_LINE_1 = [pygame.K_BACKQUOTE, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
-              pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS, pygame.K_BACKSPACE]
-    KEYS_LINE_2 = [pygame.K_TAB, pygame.K_q, pygame.K_w, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_y,
-              pygame.K_u, pygame.K_i, pygame.K_o, pygame.K_p, pygame.K_LEFTBRACKET, pygame.K_RIGHTBRACKET, pygame.K_RETURN]
-    KEYS_LINE_3 = [pygame.K_CAPSLOCK, pygame.K_a, pygame.K_s, pygame.K_d, pygame.K_f, pygame.K_g, pygame.K_h, pygame.K_j,
-              pygame.K_k, pygame.K_l, pygame.K_SEMICOLON, pygame.K_QUOTE, pygame.K_BACKSLASH]
-    KEYS_LINE_4 = [pygame.K_LSHIFT, pygame.K_z, pygame.K_x, pygame.K_c, pygame.K_v, pygame.K_b, pygame.K_n,
-              pygame.K_m, pygame.K_COMMA, pygame.K_PERIOD, pygame.K_SLASH, pygame.K_RSHIFT]
+    KEYS_LINE1 = [pygame.K_BACKQUOTE, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
+            pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS, pygame.K_BACKSPACE]
+    KEYS_LINE2 = [pygame.K_TAB, pygame.K_q, pygame.K_w, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_y,
+            pygame.K_u, pygame.K_i, pygame.K_o, pygame.K_p, pygame.K_LEFTBRACKET, pygame.K_RIGHTBRACKET, pygame.K_RETURN]
+    KEYS_LINE3 = [pygame.K_CAPSLOCK, pygame.K_a, pygame.K_s, pygame.K_d, pygame.K_f, pygame.K_g, pygame.K_h, pygame.K_j,
+            pygame.K_k, pygame.K_l, pygame.K_SEMICOLON, pygame.K_QUOTE, pygame.K_BACKSLASH]
+    KEYS_LINE4 = [pygame.K_LSHIFT, pygame.K_z, pygame.K_x, pygame.K_c, pygame.K_v, pygame.K_b, pygame.K_n,
+            pygame.K_m, pygame.K_COMMA, pygame.K_PERIOD, pygame.K_SLASH, pygame.K_RSHIFT]
+    KEYS_IHPDWP = [pygame.K_INSERT, pygame.K_HOME, pygame.K_PAGEUP, pygame.K_DELETE, pygame.K_END, pygame.K_PAGEDOWN]
+    KEYS_NUMPAD = [pygame.K_KP0, pygame.K_KP1, pygame.K_KP2, pygame.K_KP3, pygame.K_KP4, pygame.K_KP5, pygame.K_KP6, pygame.K_KP7, pygame.K_KP8, pygame.K_KP9,
+            pygame.K_KP_DIVIDE, pygame.K_KP_MULTIPLY, pygame.K_KP_MINUS, pygame.K_KP_PLUS, pygame.K_KP_ENTER, pygame.K_KP_PERIOD]
     KEYS_ARROWS = [pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT]
+
     KEYS_PIANO = [
-        pygame.K_TAB, pygame.K_1, pygame.K_q, pygame.K_2, pygame.K_w, pygame.K_e, pygame.K_4, pygame.K_r, pygame.K_5, pygame.K_t, pygame.K_6, pygame.K_y,
-            pygame.K_u, pygame.K_8, pygame.K_i, pygame.K_9, pygame.K_o, pygame.K_p, pygame.K_MINUS, pygame.K_LEFTBRACKET, pygame.K_EQUALS, pygame.K_RIGHTBRACKET, pygame.K_BACKSPACE, pygame.K_RETURN,
-        pygame.K_LSHIFT, pygame.K_a, pygame.K_z, pygame.K_s, pygame.K_x, pygame.K_c, pygame.K_f, pygame.K_v, pygame.K_g, pygame.K_b, pygame.K_h, pygame.K_n,
-            pygame.K_m, pygame.K_k, pygame.K_COMMA, pygame.K_l, pygame.K_PERIOD, pygame.K_SLASH, pygame.K_QUOTE, pygame.K_RSHIFT, pygame.K_BACKSLASH
+        # Octave first
+        pygame.K_TAB, pygame.K_1, pygame.K_q, pygame.K_2, pygame.K_w, pygame.K_e, pygame.K_4, pygame.K_r, pygame.K_5,
+            pygame.K_t, pygame.K_6, pygame.K_y,
+        # Octave second
+        pygame.K_u, pygame.K_8, pygame.K_i, pygame.K_9, pygame.K_o, pygame.K_p, pygame.K_MINUS, pygame.K_LEFTBRACKET,
+            pygame.K_EQUALS, pygame.K_RIGHTBRACKET, pygame.K_BACKSPACE, pygame.K_RETURN,
+        # Octave third
+        pygame.K_LSHIFT, pygame.K_a, pygame.K_z, pygame.K_s, pygame.K_x, pygame.K_c, pygame.K_f, pygame.K_v,
+            pygame.K_g, pygame.K_b, pygame.K_h, pygame.K_n,
+        # Octave fourth
+        pygame.K_m, pygame.K_k, pygame.K_COMMA, pygame.K_l, pygame.K_PERIOD, pygame.K_SLASH, pygame.K_QUOTE,
+            pygame.K_RSHIFT, pygame.K_BACKSLASH, pygame.K_END, pygame.K_PAGEUP, pygame.K_PAGEDOWN,
+        # Octave fifth
+        pygame.K_KP7, pygame.K_KP_DIVIDE, pygame.K_KP8, pygame.K_KP_MULTIPLY, pygame.K_KP9, pygame.K_KP1, pygame.K_KP5,
+            pygame.K_KP2, pygame.K_KP6, pygame.K_KP3, pygame.K_KP_PLUS
+        #, pygame.K_KP_ENTER
     ]
+
     KEYS_NAMES = {
         None: '',
         pygame.K_BACKQUOTE: '~',
@@ -125,7 +147,29 @@ class Variables:
         pygame.K_UP: 'UP',
         pygame.K_DOWN: 'DW',
         pygame.K_LEFT: 'LT',
-        pygame.K_RIGHT: 'RT'
+        pygame.K_RIGHT: 'RT',
+        pygame.K_INSERT: 'IN',
+        pygame.K_HOME: 'HM',
+        pygame.K_PAGEUP: 'PU',
+        pygame.K_DELETE: 'DL',
+        pygame.K_END: 'EN',
+        pygame.K_PAGEDOWN: 'PD',
+        pygame.K_KP0: 'N0',
+        pygame.K_KP1: 'N1',
+        pygame.K_KP2: 'N2',
+        pygame.K_KP3: 'N3',
+        pygame.K_KP4: 'N4',
+        pygame.K_KP5: 'N5',
+        pygame.K_KP6: 'N6',
+        pygame.K_KP7: 'N7',
+        pygame.K_KP8: 'N8',
+        pygame.K_KP9: 'N9',
+        pygame.K_KP_DIVIDE: 'N/',
+        pygame.K_KP_MULTIPLY: 'N*',
+        pygame.K_KP_MINUS: 'N-',
+        pygame.K_KP_PLUS: 'N+',
+        pygame.K_KP_ENTER: 'NE',
+        pygame.K_KP_PERIOD: 'N.'
     }
 
     MIDI_INSTRUMENTS = {
@@ -262,10 +306,14 @@ class Variables:
     # not init
     COUNT_BLACK_KEYS = 0
 
+pass  # Variables
+
+
 class Change:
     countBlackKeysL = [0, 0, 1, 2, 3, 3, 4, 5]
     countBlackKeysR = [0, 0, 1, 2, 2, 3, 4, 5]
     addToneAndBlack = [1, 1, 0, 1, 1, 1, 0]
+
     namesNotes = {
         '': ['', '', '', '', '', '', '', '', '', '', '', '', ],
         'C#': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
@@ -276,3 +324,5 @@ class Change:
         'до#': ['до', 'до#', 'ре', 'ре#', 'ми', 'фа', 'фа#', 'соль', 'соль#', 'ля', 'ля#', 'си'],
         '1': ['1', '', '2', '', '3', '4', '', '5', '', '6', '', '7']
     }
+
+pass  # Change
