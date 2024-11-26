@@ -151,7 +151,6 @@ class Keyboard:
     blackKeys = []
     whiteKeys = []
 
-
     def __init__(self, screen, scaleW, scaleH):
         self.screen = screen
         self.scaleW, self.scaleH = scaleW, scaleH
@@ -170,7 +169,6 @@ class Keyboard:
         self.init()
     pass  # __init__
 
-
     def calcCountKeys(self):
         self.countWhiteLeft = 7 - Variables.COUNT_WHITE_KEYS_IDENT
         if self.countWhiteLeft == 7:
@@ -188,7 +186,6 @@ class Keyboard:
         Variables.MIDI_TONE = (Variables.OCTAVE - 1) * 12 - self.countWhiteLeft - Change.countBlackKeysL[self.countWhiteLeft]
         # print(Variables.MIDI_TONE)
     pass  # calcCountKeys
-
 
     def calcCountLinesAndHud(self):
         intervalLines = 1
@@ -216,7 +213,6 @@ class Keyboard:
         self.fontHud = pygame.font.SysFont("Arial", max(16, int(64 * self.scaleM)))
 
     pass  # calcCountLines
-
 
     def initKeys(self):
         shiftTone = Variables.MIDI_TONE
@@ -266,7 +262,6 @@ class Keyboard:
             number += 1
     pass  # initWhiteKeys
 
-
     def init(self):
         # self.HEIGHT = self.HEIGHT * Sizes.SCREEN_HEIGHT
         self.RECT = pygame.Rect(0, Sizes.SCREEN_HEIGHT * (1 - self.HEIGHT), Sizes.SCREEN_WIDTH, self.HEIGHT * Sizes.SCREEN_HEIGHT)
@@ -285,8 +280,7 @@ class Keyboard:
 
         self.initKeys()
         self.calcCountLinesAndHud()
-    pass  # calc
-
+    pass  # init
 
     def procNotes(self):
         for i in range(Variables.COUNT_WHITE_KEYS):
@@ -316,8 +310,7 @@ class Keyboard:
                     self.plaingNotes.remove(tone)
                     self.turntable.note_off(tone, self.volume)
                     self.blackKeys[i].falls[-1]['end'] = time.time()
-    pass  # playNotes
-
+    pass  # procNotes
 
     def procMouse(self, msg):
         if msg == 'up':
@@ -362,7 +355,6 @@ class Keyboard:
                     continue
             self.isWhiteKeys[i][0] = False
     pass  # procMouse
-
 
     def procKeyboard(self): # Обработка клавиш клавиатуры
         keys = pygame.key.get_pressed()
@@ -417,7 +409,6 @@ class Keyboard:
 
     pass  # procKeyboard
 
-
     def procEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -438,7 +429,6 @@ class Keyboard:
                 self.procMouse('motion')
         return True
     pass  # procEvents
-
 
     def drawFall(self, currentTime, keys, RGB_GREEN):
         for note in keys:
@@ -470,7 +460,6 @@ class Keyboard:
 
     pass  # drawFall
 
-
     def drawNote(self, keys, isKeys, overlayNote, RGB_UP):
         for i, note in enumerate(keys):
 
@@ -492,7 +481,6 @@ class Keyboard:
                 self.screen.blit(overlayNote, (note.DRAW_RECT.x, note.DRAW_RECT.y))
 
     pass  # drawNote
-
 
     def drawLines(self):
 
@@ -524,20 +512,17 @@ class Keyboard:
 
     pass  # drawLines
 
-
     def generTextHudInstrumentAndVolume(self):
         self.textInstrument = self.fontHud.render(f'Instrument: {self.instrument}   ' +
                 f'{Variables.MIDI_INSTRUMENTS[self.instrument]}', True, ColorRGB.WHITE)
         self.textVolume = self.fontHud.render(f'Volume: {self.volume}', True, ColorRGB.WHITE)
     pass  # generHudInstrumentAndVolume
 
-
     def drawHud(self, currentTime):
         if currentTime < self.timeChangesSettings + 5:
             self.screen.blit(self.textInstrument, (10 * self.scaleW, 10 * self.scaleH))
             self.screen.blit(self.textVolume, (10 * self.scaleW, 96 * self.scaleH))
     pass  # drawHud
-
 
     def draw(self):
         currentTime = time.time()

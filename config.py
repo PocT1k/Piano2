@@ -85,8 +85,7 @@ class Variables:
             pygame.K_RSHIFT, pygame.K_BACKSLASH, pygame.K_END, pygame.K_PAGEUP, pygame.K_PAGEDOWN,
         # Octave fifth
         pygame.K_KP7, pygame.K_KP_DIVIDE, pygame.K_KP8, pygame.K_KP_MULTIPLY, pygame.K_KP9, pygame.K_KP1, pygame.K_KP5,
-            pygame.K_KP2, pygame.K_KP6, pygame.K_KP3, pygame.K_KP_PLUS
-        #, pygame.K_KP_ENTER
+            pygame.K_KP2, pygame.K_KP6, pygame.K_KP3, pygame.K_KP_PLUS, pygame.K_KP_ENTER
     ]
 
     KEYS_NAMES = {
