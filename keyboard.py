@@ -43,16 +43,16 @@ class WhiteKey(Key):
 
         # Note font and text
         self.strName = Change.namesNotes[Variables.NAME_NOTE][self.tone % 12]
-        self.sizeFontName = int(self.DRAW_RECT.width / (1.8 * min(2, len(self.strName))))
+        self.sizeFontName = int(self.DRAW_RECT.width / (1.6 * len(self.strName)))
         self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
         self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
         # Name Rect
-        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.65, COLLISION_RECT.width * 0.6)
+        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
         self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
         self.NAME_TEXT_RECT = self.textName.get_rect()
         self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
         self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.26  # y
-        self.NAME_TEXT_RECT.bottom = self.NAME_RECT.bottom + self.NAME_RECT.height * 0.03  # y
+        self.NAME_TEXT_RECT.centery = self.NAME_RECT.bottom - self.NAME_RECT.height * 0.45  # y
         self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
         self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.1)
 
@@ -93,16 +93,16 @@ class BlackKey(Key):
 
         # Note font and text
         self.strName = Change.namesNotes[Variables.NAME_NOTE][self.tone % 12]
-        self.sizeFontName = int(self.DRAW_RECT.width / 2.2)
+        self.sizeFontName = int(self.DRAW_RECT.width / (1 * len(self.strName)))
         self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
         self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
         # Name Rect
-        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.65, COLLISION_RECT.width * 0.6)
+        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
         self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
         self.NAME_TEXT_RECT = self.textName.get_rect()
         self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
         self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.2  # y
-        self.NAME_TEXT_RECT.bottom = self.NAME_RECT.bottom - self.NAME_RECT.height * 0.03  # y
+        self.NAME_TEXT_RECT.centery = self.NAME_RECT.centery + self.NAME_RECT.height * 0.03  # y
         self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
         self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.07)
 
@@ -181,7 +181,7 @@ class Keyboard:
         self.INTERVAL_LINES = intervalLines
 
         self.TEXT_LINES = []
-        fontLine = pygame.font.SysFont("Verdana", max(16, int(16 * self.scaleM)))
+        fontLine = pygame.font.SysFont("Verdana", max(16, int(24 * self.scaleM)))
         for i in range(1, self.QUAN_LINES):
             self.TEXT_LINES.append(fontLine.render(f'{i * self.INTERVAL_LINES}s', True, ColorRGB.SCENE_LINES))
 

@@ -50,7 +50,7 @@ class Variables:
     MIDI_INSTRUMENT = 0
     SPEED_FALL = 220
     START_VOLUME = 127
-    NAME_NOTE = 'C#'
+    NAME_NOTE = 'do#'
 
     KEYS_LINE_1 = [pygame.K_BACKQUOTE, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
               pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS, pygame.K_BACKSPACE]
@@ -271,5 +271,8 @@ class Change:
         'C#': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
         'C': ['C', '', 'D', '', 'E', 'F', '', 'G', '', 'A', '', 'B'],
         'do': ['do', '', 're', '', 'mi', 'fa', '', 'sol', '', 'la', '', 'si'],
+        'do#': ['do', 'do#', 're', 're#', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'la', 'la#', 'si'],
+        'до': ['до', '', 'ре', '', 'ми', 'фа', '', 'соль', '', 'ля', '', 'си'],
+        'до#': ['до', 'до#', 'ре', 'ре#', 'ми', 'фа', 'фа#', 'соль', 'соль#', 'ля', 'ля#', 'си'],
         '1': ['1', '', '2', '', '3', '4', '', '5', '', '6', '', '7']
     }
