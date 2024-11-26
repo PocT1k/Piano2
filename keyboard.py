@@ -41,20 +41,22 @@ class WhiteKey(Key):
     def __init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone):
         Key.__init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone)
 
+        self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.1)
+
         # Note font and text
         self.strName = Change.namesNotes[Variables.NAME_NOTE][self.tone % 12]
-        self.sizeFontName = int(self.DRAW_RECT.width / (1.6 * len(self.strName)))
-        self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
-        self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
-        # Name Rect
-        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
-        self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
-        self.NAME_TEXT_RECT = self.textName.get_rect()
-        self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
-        self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.26  # y
-        self.NAME_TEXT_RECT.centery = self.NAME_RECT.bottom - self.NAME_RECT.height * 0.45  # y
-        self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
-        self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.1)
+        if self.strName:
+            self.sizeFontName = int(self.DRAW_RECT.width / (1.6 * len(self.strName)))
+            self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
+            self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
+            # Name Rect
+            self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
+            self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
+            self.NAME_TEXT_RECT = self.textName.get_rect()
+            self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
+            self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.26  # y
+            self.NAME_TEXT_RECT.centery = self.NAME_RECT.bottom - self.NAME_RECT.height * 0.45  # y
+            self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
 
         # Key
         self.textKey = self.fontKey.render(self.strKey, True, ColorRGB.ALMOST_BLACK)
@@ -91,20 +93,22 @@ class BlackKey(Key):
                 exit(0)
         Key.__init__(self, COLLISION_RECT, DRAW_RECT, number, shiftTone)
 
+        self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.07)
+
         # Note font and text
         self.strName = Change.namesNotes[Variables.NAME_NOTE][self.tone % 12]
-        self.sizeFontName = int(self.DRAW_RECT.width / (1 * len(self.strName)))
-        self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
-        self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
-        # Name Rect
-        self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
-        self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
-        self.NAME_TEXT_RECT = self.textName.get_rect()
-        self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
-        self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.2  # y
-        self.NAME_TEXT_RECT.centery = self.NAME_RECT.centery + self.NAME_RECT.height * 0.03  # y
-        self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
-        self.BORDER_RADIUS_NOTE = int(COLLISION_RECT.width * 0.07)
+        if self.strName:
+            self.sizeFontName = int(self.DRAW_RECT.width / (1 * len(self.strName)))
+            self.fontName = pygame.font.SysFont("Verdana", self.sizeFontName)
+            self.textName = self.fontName.render(self.strName, True, ColorRGB.ALMOST_BLACK)
+            # Name Rect
+            self.NAME_RECT = pygame.Rect(0, 0, COLLISION_RECT.width * 0.7, COLLISION_RECT.width * 0.65)
+            self.NAME_RECT.centerx = self.COLLISION_RECT.centerx  # x
+            self.NAME_TEXT_RECT = self.textName.get_rect()
+            self.NAME_TEXT_RECT.centerx = self.NAME_RECT.centerx  # x
+            self.NAME_RECT.centery = self.COLLISION_RECT.centery + self.COLLISION_RECT.height * 0.2  # y
+            self.NAME_TEXT_RECT.centery = self.NAME_RECT.centery + self.NAME_RECT.height * 0.03  # y
+            self.BORDER_RADIUS_NAME = int(COLLISION_RECT.width * 0.1)
 
         # Key
         self.textKey = self.fontKey.render(self.strKey, True, ColorRGB.KEY_UP_WHITE)
@@ -418,6 +422,7 @@ class Keyboard:
             # Некоторые атрибуты для ноты, которые рисуются заранее
             if note.strOctave:
                 self.screen.blit(note.textOctave, (note.DRAW_RECT.left + note.sizeFontOctave * 0.1, note.COLLISION_RECT.top - note.sizeFontOctave * 1.1))
+                pass
 
             # Её падающие прямоугльники
             for fall in note.falls:
@@ -474,7 +479,7 @@ class Keyboard:
 
         # Горизонтальные
         for i in range (1, self.QUAN_LINES):
-            y = self.RECT.top - i * self.speedFall
+            y = self.RECT.top - i * self.speedFall * self.INTERVAL_LINES
             if y < 0: # Если рисуем за экраном
                 break
 
@@ -514,5 +519,6 @@ class Keyboard:
 
         self.drawHud(currentTime)
     pass  # draw
+
 
 pass  # class Keyboard

@@ -39,3 +39,5 @@ pass
 
 if __name__ == '__main__':
     run()
+
+# pyinstaller main.py config.py keyboard.py -n Пианино -F --noconsole
