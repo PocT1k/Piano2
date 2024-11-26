@@ -4,6 +4,7 @@ import pygame
 
 class ColorRGB:
     WHITE = (255, 255, 255)
+    ALMOST_BLACK = (15, 15, 15)
     BLACK = (0, 0, 0)
 
     SCENE_BG = (56, 56, 56)
@@ -20,7 +21,7 @@ class ColorRGB:
     # FONT_WHITE = (63, 63, 63)
 
     # Black
-    KEY_UP_BLACK = (15, 15, 15)
+    KEY_UP_BLACK = ALMOST_BLACK
     KEY_DOWN_BLACK = KEY_DOWN  # (63, 63, 63)
     FALL_GREEN_BLACK = (0, 138, 0)
 
@@ -46,10 +47,10 @@ class Variables:
     COUNT_WHITE_KEYS_IDENT = 0  # Сколько клавиш добавить к октаве слева
     OCTAVE = 4  # Октава, с которой начинаем
     MIDI_TONE = 0
-    MIDI_INSTRUMENT = 2
+    MIDI_INSTRUMENT = 0
     SPEED_FALL = 220
     START_VOLUME = 127
-    NAME_NOTE = 'C'
+    NAME_NOTE = 'C#'
 
     KEYS_LINE_1 = [pygame.K_BACKQUOTE, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, pygame.K_6, pygame.K_7,
               pygame.K_8, pygame.K_9, pygame.K_0, pygame.K_MINUS, pygame.K_EQUALS, pygame.K_BACKSPACE]
