@@ -24,18 +24,28 @@ class ColorRGB:
     KEY_DOWN_BLACK = KEY_DOWN  # (63, 63, 63)
     FALL_GREEN_BLACK = (0, 138, 0)
 
-
+    OCTAVES = [
+        (212, 212, 210),
+        (209, 178, 176),
+        (255, 190, 162),
+        (246, 238, 175),
+        (185, 252, 181),
+        (128, 233, 217),
+        (150, 182, 241),
+        (232, 190, 230),
+        (228, 211, 227)
+    ]
 
 class Sizes:
     SCREEN_WIDTH, SCREEN_HEIGHT = 0, 0
     # SCREEN_WIDTH, SCREEN_HEIGHT = 500, 300
-    # left, top, width, height
+    # left, top, width, height, right, bottom, center
 
 class Variables:
     COUNT_WHITE_KEYS = 28  # Сколько всего белых клавиш
-    COUNT_WHITE_KEYS_IDENT = 0  # Сколько пропустить или добавить в 1-й октаве, что именно - не помню
+    COUNT_WHITE_KEYS_IDENT = 0  # Сколько клавиш добавить к октаве слева
     OCTAVE = 4  # Октава, с которой начинаем
-    MIDI_TONE = 0  # Сдвиг нот
+    MIDI_TONE = 0
     MIDI_INSTRUMENT = 2
     SPEED_FALL = 220
     START_VOLUME = 127
@@ -256,7 +266,9 @@ class Change:
     countBlackKeysR = [0, 0, 1, 2, 2, 3, 4, 5]
     addToneAndBlack = [1, 1, 0, 1, 1, 1, 0]
     namesNotes = {
-        'C': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+        '': ['', '', '', '', '', '', '', '', '', '', '', '', ],
+        'C#': ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+        'C': ['C', '', 'D', '', 'E', 'F', '', 'G', '', 'A', '', 'B'],
         'do': ['do', '', 're', '', 'mi', 'fa', '', 'sol', '', 'la', '', 'si'],
         '1': ['1', '', '2', '', '3', '4', '', '5', '', '6', '', '7']
     }
