@@ -204,10 +204,10 @@ class Keyboard:
         self.TEXT_LINES = []
         fontLine = pygame.font.SysFont("Verdana", max(16, int(24 * self.scaleM)))
         for i in range(1, self.QUAN_LINES):
-            self.TEXT_LINES.append(fontLine.render(f'{i * self.INTERVAL_LINES}s', True, ColorRGB.SCENE_LINES))
+            self.TEXT_LINES.append(fontLine.render(f'{i * self.INTERVAL_LINES}s', True, ColorRGB.SCENE_LINES1))
 
         self.WIDTH_LINES_VRT1 = int(max(1, 4 * self.scaleH))
-        self.WIDTH_LINES_VRT2 = int(max(1, 4 * self.scaleH))
+        self.WIDTH_LINES_VRT2 = int(max(1, 3 * self.scaleH))
         self.WIDTH_LINES_HRZ = int(max(1, 2 * self.scaleW))
 
         self.fontHud = pygame.font.SysFont("Arial", max(16, int(64 * self.scaleM)))
@@ -486,16 +486,28 @@ class Keyboard:
 
         # Вертикальные
         for note in self.whiteKeys:
-            if note.strOctave:
-                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
+            if note.number % 12 == 0:
+                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES1,
                         (note.COLLISION_RECT.left, note.COLLISION_RECT.top),
                         (note.COLLISION_RECT.left, 0),
                         width = self.WIDTH_LINES_VRT1)
             if note.number % 12 == 11:
-                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
+                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES1,
+                        (note.COLLISION_RECT.right, note.COLLISION_RECT.top),
+                        (note.COLLISION_RECT.right, 0),
+                        width = self.WIDTH_LINES_VRT1)
+
+            if note.number % 12 == 3:
+                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES2,
+                        (note.COLLISION_RECT.left, note.COLLISION_RECT.top),
+                        (note.COLLISION_RECT.left, 0),
+                        width = self.WIDTH_LINES_VRT2)
+            if note.number % 12 == 4:
+                pygame.draw.line(self.screen, ColorRGB.SCENE_LINES2,
                         (note.COLLISION_RECT.right, note.COLLISION_RECT.top),
                         (note.COLLISION_RECT.right, 0),
                         width = self.WIDTH_LINES_VRT2)
+
 
         # Горизонтальные
         for i in range (1, self.QUAN_LINES):
@@ -504,7 +516,7 @@ class Keyboard:
             if y < 0:  # Если рисуем за экраном
                 break
 
-            pygame.draw.line(self.screen, ColorRGB.SCENE_LINES,
+            pygame.draw.line(self.screen, ColorRGB.SCENE_LINES1,
                     (self.RECT.left, y),
                     (self.RECT.right, self.RECT.top - i * self.speedFall * self.INTERVAL_LINES),
                     width = self.WIDTH_LINES_HRZ)

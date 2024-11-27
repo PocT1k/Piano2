@@ -8,7 +8,8 @@ class ColorRGB:
     BLACK = (0, 0, 0)
 
     SCENE_BG = (56, 56, 56)
-    SCENE_LINES = (120, 120, 120)
+    SCENE_LINES1 = (120, 120, 120)
+    SCENE_LINES2 = (88, 88, 88)
     KEYBOARD_BG = BLACK
     KEY_DOWN = (127, 127, 127)
     TRIM_FALL = (31, 31, 31)
