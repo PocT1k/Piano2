@@ -12,8 +12,8 @@ def initScreen():
     if Sizes.SCREEN_HEIGHT == 0: Sizes.SCREEN_HEIGHT = displayInfo.current_h
     screen = pygame.display.set_mode((Sizes.SCREEN_WIDTH, Sizes.SCREEN_HEIGHT))
     # screen = pygame.display.set_mode((100, 100), pygame.FULLSCREEN)
-    scaleW = Sizes.SCREEN_WIDTH / displayInfo.current_w
-    scaleH = Sizes.SCREEN_HEIGHT / displayInfo.current_h
+    scaleW = Sizes.SCREEN_WIDTH / 1920  # displayInfo.current_w
+    scaleH = Sizes.SCREEN_HEIGHT / 1080  # displayInfo.current_h
     return screen, scaleW, scaleH
 pass
 
